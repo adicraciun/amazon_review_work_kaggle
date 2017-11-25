@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn import tree
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 import timeit
@@ -16,21 +16,20 @@ labels = train['Class']
 bestacc = 0.0
 i = 1
 while i < 100:
-    i=100
     curTime = time.time()
     avgAcc = 0.0
     for _ in range(1):
-        clf = DecisionTreeClassifier()
+        clf = RandomForestClassifier(n_estimators=100, max_depth=i)
         clf = clf.fit(features, labels)
-        avgAcc += accuracy_score(clf.predict(test.drop("ID", axis=1).drop('Class', axis=1)), test['Class'], normalize=True)
-    avgAcc = avgAcc / 3
-    # print "\\bcbar[label=Number of trees: %d]{%.2f}" % (i, avgAcc)
+        avgAcc = avgAcc + accuracy_score(clf.predict(test.drop("ID", axis=1).drop('Class', axis=1)), test['Class'], normalize=True)
+    avgAcc = avgAcc / 1
+    print "\\bcbar[label=Number of trees: %d]{%.2f}" % (i, avgAcc)
     # if (bestacc < acc):
     #     bestclf = clf
     #     bestacc = acc
 
     nextTime = time.time()
-    print "\\bcbar[text=Number of trees: %d]{%.2f}" % (i, nextTime - curTime)
+    # print "\\bcbar[text=Number of trees: %d]{%.2f}" % (i, nextTime - curTime)
 
     if i < 100:
         i += 2
